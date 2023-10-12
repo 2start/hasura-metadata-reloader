@@ -10,7 +10,7 @@ We regularly faced problems with inconsistent state in Hasura for the following 
 - Remote Schema error: The remote schema may go out of sync because there is a bug in the service and Hasura cannot introspect the schema properly. The service may be fixed but Hasura already gave up on our service.
 - The underlying database is modified by forces outside of our control i.e. customers. Let's say a customer runs a job to recreate certain tables on a regular basis. This may lead to Hasura throwing inconsistency errors and not recovering.
 
-## How to build application
+## Build
 
 Open the directory with newly created project and run:
 
@@ -21,17 +21,16 @@ go build -o hasura-metadata-reloader
 it will result in building executable file "hasura-metadata-reloader" (feel free to name it differently).
 
 
-## How to run application
-
-### Configuration
+## Run
 
 For simplicity, the application cannot be configured via env variables. Instead, you can just pass the env variables as flags.
-See more in TODO how to deploy application.
 
 
 ```shell
 ./hasura-metadata-reloader reload --endpoint=$HASURA_ENDPOINT --admin-secret $HASURA_ADMIN_SECRET --sentry-dsn $SENTRY_DSN
 ```
+
+docker pull ghcr.io/2start/hasura-metadata-reloader:latest
 
 ### Sample Output with Metadata Inconsistency
 
@@ -44,3 +43,20 @@ Sample Output without Metadata Inconsistency
 
 ```shell
 ```
+
+## Deployment
+
+There are multiple useful scenarios to run the container in. 
+
+### Webservice
+TODO
+
+
+### Kubernetes Job
+
+Run the container as a Kubernetes CronJob. E.g. run it every 3 minutes. This will ensure that the Hasura metadata is always in sync and you'll notice if it is out of sync. The docker container will exit with exit status 1 when inconsistencies are found after reload.
+
+
+
+
+
