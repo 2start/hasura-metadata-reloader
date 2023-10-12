@@ -1,6 +1,3 @@
-# syntax=docker/dockerfile:1
-# The first line specifies the Dockerfile version
-
 # Name the build stage as "build"
 # Using golang:1.21-alpine image as the base image
 FROM golang:1.21-alpine AS build
@@ -29,6 +26,7 @@ RUN GOOS=linux go build -ldflags="-s -w" -o ./bin/hasura-metadata-reloader ./mai
 
 # Scratch is a minimalist Docker image with no operating system.
 # It's used when you want to distribute a self-contained application binary.
+# The final image will be just a few megabytes in size (7.8MiB).
 FROM scratch
 
 # Add metadata to the image
@@ -50,4 +48,4 @@ USER 1001
 EXPOSE 8080
 
 # Command to run the server
-CMD ["/hasura-metadata-reloader"]
+CMD ["/bin/hasura-metadata-reloader"]
