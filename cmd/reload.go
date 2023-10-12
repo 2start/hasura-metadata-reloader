@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"os"
+
 	"github.com/2start/hasura-metadata-reloader/internal/hasura"
 	"github.com/spf13/cobra"
 )
@@ -14,7 +16,9 @@ var (
 		Long: "Call Hasura API to reload metadata. If there is an inconsistency found it will be logged." +
 		" If sentry-dsn is specified, the inconsistency will be reported to Sentry.",
 		Run: func(cmd *cobra.Command, args []string) {
-			hasura.ReloadMetadata(endpoint, adminSecret)
+			if err := hasura.ReloadMetadata(endpoint, adminSecret); err != nil {
+				os.Exit(1)
+			}
 		},
 	}
 )

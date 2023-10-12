@@ -25,13 +25,13 @@ func (e *MetadataInconsistentError) Error() string {
 	return "metadata is inconsistent"
 }
 
-func ReloadMetadata(endpoint string, adminSecret string) {
+func ReloadMetadata(endpoint string, adminSecret string) error {
 	metadataClient := NewClient(endpoint, adminSecret)
 	jsonResp, err := metadataClient.SendRequest("reload_metadata", make(map[string]interface{}))
 
 	if err != nil {
-		log.Error().Err(err).Msg("The HTTP request failed.")
-		return
+		log.Error().Err(err).Msg("The HTTP request to the Metadata API failed.")
+		return err
 	}
 
 	var respBody ReloadMetadataResponseBody
@@ -41,7 +41,7 @@ func ReloadMetadata(endpoint string, adminSecret string) {
 		log.Error().
 			Err(err).
 			Msg("Failed to parse the response.")
-		return
+		return err
 	}
 
 	if !respBody.IsConsistent {
@@ -64,10 +64,12 @@ func ReloadMetadata(endpoint string, adminSecret string) {
 			},
 		)
 
-		return
+		return errInconsistency
 	}
 
 	log.Info().
 		Bool("is_consistent", respBody.IsConsistent).
 		Msg("Metadata is consistent.")
+
+	return nil
 }
