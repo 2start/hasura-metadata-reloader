@@ -15,7 +15,6 @@ func InitSentry(dsn string, env string) {
 
 	err := sentry.Init(sentry.ClientOptions{
 		Dsn: dsn,
-		// TODO configure this
 		Environment: env,
 	})
 	if err != nil {

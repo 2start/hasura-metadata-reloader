@@ -25,10 +25,10 @@ var (
 
 func init() {
 	reloadCmd.Flags().StringVar(&endpoint, "endpoint", "",
-		"deployment environment for API server, e.g. local, prod (it should match your configuration filename)")
+		"Hasura endpoint URL, e.g. https://hasura.canida.io")
 	_ = reloadCmd.MarkFlagRequired("endpoint")
 	reloadCmd.Flags().StringVar(&adminSecret, "admin-secret", "",
-		"deployment environment for API server, e.g. local, prod (it should match your configuration filename)")
+		"Hasura admin secret.")
 	_ = reloadCmd.MarkFlagRequired("admin-secret")
 	rootCmd.AddCommand(reloadCmd)
 }

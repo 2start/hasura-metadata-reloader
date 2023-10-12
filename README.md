@@ -1,5 +1,7 @@
 # Hasura Metadata Reloader
 
+
+
 ## About
 
 At canida.io, we use Hasura to generate GraphQL APIs for most of our projects. 
@@ -8,19 +10,9 @@ If there are inconsistencies discovered in the metadata despite a reload, the in
 
 We regularly faced problems with inconsistent state in Hasura for the following reasons:
 
-- Remote Schema temporarily unavailable : Hasura just gives up after a short time. I.e. the remote schema may come back up but Hasura will not try to contact it again. Then, the Hasura API can not serve the remote schema.
-- Remote Schema error: The remote schema may go out of sync because there is a bug in the service and Hasura cannot introspect the schema properly. The service may be fixed but Hasura already gave up on our service.
-- The underlying database is modified by forces outside of our control i.e. customers. Let's say a customer runs a job to recreate certain tables on a regular basis. This may lead to Hasura throwing inconsistency errors and not recovering.
-
-## Build
-
-Open the directory with newly created project and run:
-
-```shell 
-go build -o hasura-metadata-reloader
-```
-
-it will result in building executable file "hasura-metadata-reloader" (feel free to name it differently).
+- **Remote Schema temporarily unavailable**: Hasura just gives up after a short time. I.e. the remote schema may come back up but Hasura will not try to contact it again. Then, the Hasura API can not serve the remote schema.
+- **Remote Schema error**: The remote schema may go out of sync because there is a bug in the service and Hasura cannot introspect the schema properly. The service may be fixed but Hasura already gave up on our service.
+- The **underlying database is modified** by forces outside of our control. Let's say a customer runs a job to recreate certain database tables on a regular basis. This may lead to Hasura throwing inconsistency errors because it cannot find the table for a period of time and then it will not recover.
 
 
 ## Run
@@ -31,11 +23,14 @@ For simplicity, the application cannot be configured via env variables. Instead,
 ### Binary
 
 ```shell
+go build -o hasura-metadata-reloader
 ./hasura-metadata-reloader reload --endpoint=$HASURA_ENDPOINT --admin-secret $HASURA_ADMIN_SECRET --sentry-dsn $SENTRY_DSN
 ```
 
 ### Docker 
-docker run ghcr.io/2start/hasura-metadata-reloader:latest
+```shell
+docker run ghcr.io/2start/hasura-metadata-reloader:latest hasura-metadata-reloader reload --endpoint=$HASURA_ENDPOINT --admin-secret $HASURA_ADMIN_SECRET --sentry-dsn $SENTRY_DSN
+```
 
 ### Sample Output with Metadata Inconsistency
 
@@ -47,14 +42,18 @@ docker run ghcr.io/2start/hasura-metadata-reloader:latest
 ### Sample Output without Metadata Inconsistencies
 
 ```shell
+{"level":"info","time":"2023-10-12T19:32:56Z","message":"Sentry initialized."}
+{"level":"info","is_consistent":true,"time":"2023-10-12T19:32:58Z","message":"Metadata is consistent."}
 ```
 
 ## Deployment
 
-There are multiple useful scenarios to run the container in. 
+There are multiple ways to utilize the Hasura Metadata Reloader. 
 
 ### Webservice
-TODO
+TODO add a HTTP endpoint that triggers reload of the metadata.
+
+Run the container using your method of choice e.g. docker, docker-compose, kubernetes, CaaS. Call the http endpoint /reload_metadata to reload the metadata. You can trigger the endpoint in a regular interval e.g. every 3 minutes via some kind of cronjob. Alternatively, you can trigger the endpoint after your remote schemas start up. I.e. if your remote schemas were down for some time, they can notify Hasura that they are up and ready again.
 
 
 ### Kubernetes Job

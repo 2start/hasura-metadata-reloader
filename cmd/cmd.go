@@ -16,7 +16,6 @@ var rootCmd = &cobra.Command{
 		sentryDsn, _ := cmd.Flags().GetString("sentry-dsn")
 		sentryEnv, _ := cmd.Flags().GetString("sentry-env")
 
-		// Initialize logger with the log level
 		reporting.InitSentry(sentryDsn, sentryEnv)
 	},
 	PersistentPostRun: func(cmd *cobra.Command, args []string) {
