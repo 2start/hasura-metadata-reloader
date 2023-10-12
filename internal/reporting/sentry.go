@@ -10,11 +10,11 @@ import (
 func InitSentry(dsn string, env string) {
 	if dsn == "" {
 		log.Info().Msg("Sentry DSN is not specified. Sentry will not be initialized.")
-		return	
+		return
 	}
 
 	err := sentry.Init(sentry.ClientOptions{
-		Dsn: dsn,
+		Dsn:         dsn,
 		Environment: env,
 	})
 	if err != nil {
@@ -29,7 +29,7 @@ func FlushSentry() {
 }
 
 func CaptureErrorWithContext(err error, contextKey string, contextValue map[string]interface{}) {
-	sentry.WithScope(func(scope *sentry.Scope) { 
+	sentry.WithScope(func(scope *sentry.Scope) {
 		scope.SetContext(contextKey, contextValue)
 		sentry.CaptureException(err)
 	})

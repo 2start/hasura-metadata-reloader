@@ -14,7 +14,7 @@ var (
 		Use:   "reload --endpoint=https://hasura.canida.io --admin-secret=MYSECRET",
 		Short: "Call Hasura API to reload metadata.",
 		Long: "Call Hasura API to reload metadata. If there is an inconsistency found it will be logged." +
-		" If sentry-dsn is specified, the inconsistency will be reported to Sentry.",
+			" If sentry-dsn is specified, the inconsistency will be reported to Sentry.",
 		Run: func(cmd *cobra.Command, args []string) {
 			if err := hasura.ReloadMetadata(endpoint, adminSecret); err != nil {
 				os.Exit(1)

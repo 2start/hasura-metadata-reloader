@@ -10,7 +10,6 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-
 type RequestBody struct {
 	Type string                 `json:"type"`
 	Args map[string]interface{} `json:"args"`
@@ -40,7 +39,7 @@ func (c *MetadataClient) SendRequest(reqType string, args map[string]interface{}
 
 	jsonReqBody, _ := json.Marshal(reqBody)
 
-	req,_ := http.NewRequest("POST", url, bytes.NewBuffer(jsonReqBody))
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(jsonReqBody))
 	req.Header.Set("X-Hasura-Admin-Secret", c.AdminSecret)
 	req.Header.Set("Content-Type", "application/json")
 
