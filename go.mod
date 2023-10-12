@@ -1,6 +1,6 @@
 module github.com/2start/hasura-metadata-reloader
 
-go 1.19
+go 1.21
 
 require (
 	github.com/getsentry/sentry-go v0.25.0
