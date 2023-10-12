@@ -1,10 +1,8 @@
 # Hasura Metadata Reloader
 
-
-
 ## About
 
-At canida.io, we use Hasura to generate GraphQL APIs for most of our projects. 
+At canida.io, we use Hasura to generate GraphQL APIs for most of our projects.
 The following project calls the Hasura Metadata API to reload the Hasura metadata. The tool is intended to run as a Kubernetes job.
 If there are inconsistencies discovered in the metadata despite a reload, the inconsistencies are reported to Sentry.
 
@@ -27,7 +25,7 @@ go build -o hasura-metadata-reloader
 ./hasura-metadata-reloader reload --endpoint=$HASURA_ENDPOINT --admin-secret $HASURA_ADMIN_SECRET --sentry-dsn $SENTRY_DSN
 ```
 
-### Docker 
+### Docker
 ```shell
 docker run ghcr.io/2start/hasura-metadata-reloader:latest hasura-metadata-reloader reload --endpoint=$HASURA_ENDPOINT --admin-secret $HASURA_ADMIN_SECRET --sentry-dsn $SENTRY_DSN
 ```
@@ -49,7 +47,7 @@ docker run ghcr.io/2start/hasura-metadata-reloader:latest hasura-metadata-reload
 
 ## Deployment
 
-There are multiple ways to utilize the Hasura Metadata Reloader. 
+There are multiple ways to utilize the Hasura Metadata Reloader.
 
 ### Webservice
 TODO add a HTTP endpoint that triggers reload of the metadata.
@@ -61,7 +59,10 @@ Run the container using your method of choice e.g. docker, docker-compose, kuber
 
 Run the container as a Kubernetes CronJob. E.g. run it every 3 minutes. This will ensure that the Hasura metadata is always in sync and you'll notice if it is out of sync. The docker container will exit with exit status 1 when inconsistencies are found after reload.
 
+## Contributing
 
+### pre commit hooks
 
+I use pre-commit hooks to check several conditions before commiting e.g. code is formatted properly with gofmt. The pre-commit hooks are configured in `.pre-commit-config.yaml`.
 
-
+Install [pre-commit](https://pre-commit.com/#install) first and then install the pre-commit hooks via `pre-commit install`.
