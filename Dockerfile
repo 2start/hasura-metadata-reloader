@@ -30,7 +30,8 @@ RUN GOOS=linux go build -ldflags="-s -w" -o ./bin/hasura-metadata-reloader ./mai
 FROM scratch
 
 # Add metadata to the image
-LABEL org.opencontainers.image.description "A tool to reload hasura metadata and report inconsistencies."
+LABEL org.opencontainers.image.source=https://github.com/2start/hasura-metadata-reloader
+LABEL org.opencontainers.image.description="Hasura Metadata Reloader"
 
 # Copy the binary from the "build" stage (/app/bin/hasura-metadata-reloader) to the "deploy" stage (/bin/hasura-metadata-reloader)
 COPY --from=build /app/bin/hasura-metadata-reloader /bin/hasura-metadata-reloader 
