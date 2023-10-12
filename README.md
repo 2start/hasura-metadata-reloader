@@ -1,3 +1,5 @@
+# Hasura Metadata Reloader
+
 ## About
 
 At canida.io, we use Hasura to generate GraphQL APIs for most of our projects. 
@@ -26,11 +28,14 @@ it will result in building executable file "hasura-metadata-reloader" (feel free
 For simplicity, the application cannot be configured via env variables. Instead, you can just pass the env variables as flags.
 
 
+### Binary
+
 ```shell
 ./hasura-metadata-reloader reload --endpoint=$HASURA_ENDPOINT --admin-secret $HASURA_ADMIN_SECRET --sentry-dsn $SENTRY_DSN
 ```
 
-docker pull ghcr.io/2start/hasura-metadata-reloader:latest
+### Docker 
+docker run ghcr.io/2start/hasura-metadata-reloader:latest
 
 ### Sample Output with Metadata Inconsistency
 
@@ -39,7 +44,7 @@ docker pull ghcr.io/2start/hasura-metadata-reloader:latest
 {"level":"error","error":"metadata is inconsistent","inconsistent_objects":[{"definition":{"comment":null,"definition":{"customization":{"root_fields_namespace":"supabase"},"forward_client_headers":true,"timeout_seconds":60,"url_from_env":"SUPABASE_AUTH_CONNECTOR_URL"},"name":"supabase-auth-connector","permissions":[],"remote_relationships":[]},"message":{"message":"Connection failure: Network.Socket.connect: <socket: 31>: does not exist (Connection refused)","request":{"host":"supabase-auth-connector.staging","method":"POST","path":"/graphql","port":80,"queryString":"","requestHeaders":{"Content-Type":"application/json","User-Agent":"hasura-graphql-engine/v2.28.1"},"responseTimeout":"ResponseTimeoutMicro 60000000","secure":false},"type":"http_exception"},"name":"remote_schema supabase-auth-connector","reason":"Inconsistent object: HTTP exception occurred while sending the request to \"SUPABASE_AUTH_CONNECTOR_URL\"","type":"remote_schema"}],"time":"2023-10-12T18:13:25+02:00","message":"Metadata is inconsistent."}
 ```
 
-Sample Output without Metadata Inconsistency
+### Sample Output without Metadata Inconsistencies
 
 ```shell
 ```
