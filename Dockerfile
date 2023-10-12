@@ -21,6 +21,8 @@ RUN GOOS=linux go build -ldflags="-s -w" -o ./bin/hasura-metadata-reloader ./mai
 
 
 FROM alpine:3.17
+LABEL org.opencontainers.image.description "A tool to reload hasura metadata and report inconsistencies."
+
 RUN apk --no-cache add ca-certificates
 WORKDIR /app
 COPY --from=build /go/src/app/bin /app
