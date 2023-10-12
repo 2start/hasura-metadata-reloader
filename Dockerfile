@@ -1,32 +1,42 @@
-FROM golang:alpine AS build
+# syntax=docker/dockerfile:1
 
-RUN apk --no-cache add \
-    gcc \
-    g++ \
-    make \
-    git
+##
+## STEP 1 - BUILD
+##
+FROM golang:1.21-alpine AS build
+RUN adduser -D -u 1001 gouser
 
+WORKDIR /app
 
-WORKDIR /go/src/app
+# copy Go modules and dependencies to image
+COPY go.mod go.sum ./
 
+# download Go modules and dependencies
+RUN go mod download
+
+# copy all files ending with .go
+COPY *.go ./
 COPY ./cmd ./cmd
 COPY ./internal ./internal
 
-
-COPY go.mod .
-COPY go.sum .
-COPY *.go ./
-RUN go mod tidy
+# compile application -s -w flags to reduce binary size
 RUN GOOS=linux go build -ldflags="-s -w" -o ./bin/hasura-metadata-reloader ./main.go
 
-
-FROM alpine:3.17
+##
+## STEP 2 - DEPLOY
+##
+FROM scratch
 LABEL org.opencontainers.image.description "A tool to reload hasura metadata and report inconsistencies."
 
-RUN apk --no-cache add ca-certificates
-WORKDIR /app
-COPY --from=build /go/src/app/bin /app
+# Copy the binary.
+COPY --from=build /app/bin/hasura-metadata-reloader /bin/hasura-metadata-reloader
+# Copy the /etc/passwd file created in the build stage to use the gouser in the scratch image
+COPY --from=build /etc/passwd /etc/passwd
+# Copy CA certificates o.w. SSL calls to external services will fail. 
+COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
-ENV PATH="/app:${PATH}"
-CMD ["/app/hasura-metadata-reloader"]
+USER 1001
 
+EXPOSE 8080
+
+CMD ["/hasura-metadata-reloader"]
