@@ -18,8 +18,8 @@ type Configuration struct {
 func (cfg *Configuration) LoadFlagsAndBind(cmd *cobra.Command) error {
 
 	flagsAndEnv := map[string]string{
-		"HASURA_ENDPOINT":     "endpoint",
-		"HASURA_ADMIN_SECRET": "admin-secret",
+		"HASURA_ENDPOINT":     "hasura-endpoint",
+		"HASURA_ADMIN_SECRET": "hasura-admin-secret",
 		"SENTRY_DSN":          "sentry-dsn",
 		"SENTRY_ENV":          "sentry-env",
 	}
