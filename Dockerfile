@@ -15,13 +15,12 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 # Copy all relevant Go source code files (main.go), cmd and internal directory to the Docker image
-COPY main.go ./
 COPY ./cmd ./cmd
 COPY ./internal ./internal
 
 # Build the Go application, -s -w reduces the size of the binary by omitting the symbol table and debug information
 # The binary is output to ./bin/hasura-metadata-reloader
-RUN GOOS=linux go build -ldflags="-s -w" -o ./bin/hasura-metadata-reloader ./cmd/cli/main.go
+RUN GOOS=linux go build -ldflags="-s -w" -o ./bin/hasura-metadata-reloader ./cmd/main.go
 
 
 # Scratch is a minimalist Docker image with no operating system.
