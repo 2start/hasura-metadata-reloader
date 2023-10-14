@@ -1,6 +1,6 @@
-![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/2start/hasura-metadata-reloader/build-and-push-with-semver.yaml)
-
 # Hasura Metadata Reloader
+
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/2start/hasura-metadata-reloader/build-and-push-with-semver.yaml)
 
 ## Overview
 
