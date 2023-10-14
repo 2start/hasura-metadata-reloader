@@ -26,7 +26,7 @@ RUN GOOS=linux go build -ldflags="-s -w" -o ./bin/hasura-metadata-reloader ./mai
 
 # Scratch is a minimalist Docker image with no operating system.
 # It's used when you want to distribute a self-contained application binary.
-# The final image will be just a few megabytes in size (7.8MiB).
+# The final image will be just a few megabytes in size (last checked < 5MiB).
 FROM scratch
 
 # Add metadata to the image

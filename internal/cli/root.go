@@ -1,9 +1,10 @@
-package cmd
+package cli
 
 import (
 	"fmt"
 	"os"
 
+	"github.com/2start/hasura-metadata-reloader/internal/config"
 	"github.com/2start/hasura-metadata-reloader/internal/reporting"
 	"github.com/spf13/cobra"
 )
@@ -13,10 +14,14 @@ var rootCmd = &cobra.Command{
 	Short: "Hasura Metadata Reloader",
 	Long:  "Check hasura metadata for inconsistencies and reload if necessary. Report to Sentry if inconsistency was found.",
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		sentryDsn, _ := cmd.Flags().GetString("sentry-dsn")
-		sentryEnv, _ := cmd.Flags().GetString("sentry-env")
+		cfg, err := config.NewConfigurationWithCmdParams(cmd)
+		if err != nil {
+			os.Exit(1)
+		}
 
-		reporting.InitSentry(sentryDsn, sentryEnv)
+		println("endpoint: " + cfg.Endpoint)
+
+		reporting.InitSentry(cfg.SentryDsn, cfg.SentryEnv)
 	},
 	PersistentPostRun: func(cmd *cobra.Command, args []string) {
 		reporting.FlushSentry()
@@ -30,7 +35,7 @@ func init() {
 
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		_, _ = fmt.Fprintln(os.Stderr, err)
+		fmt.Fprint(os.Stderr, err)
 		os.Exit(1)
 	}
 }

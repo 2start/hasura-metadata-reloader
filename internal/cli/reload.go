@@ -1,22 +1,26 @@
-package cmd
+package cli
 
 import (
 	"os"
 
+	"github.com/2start/hasura-metadata-reloader/internal/config"
 	"github.com/2start/hasura-metadata-reloader/internal/hasura"
 	"github.com/spf13/cobra"
 )
 
 var (
-	endpoint    string
-	adminSecret string
-	reloadCmd   = &cobra.Command{
+	reloadCmd = &cobra.Command{
 		Use:   "reload --endpoint=https://hasura.canida.io --admin-secret=MYSECRET",
 		Short: "Call Hasura API to reload metadata.",
 		Long: "Call Hasura API to reload metadata. If there is an inconsistency found it will be logged." +
 			" If sentry-dsn is specified, the inconsistency will be reported to Sentry.",
 		Run: func(cmd *cobra.Command, args []string) {
-			if err := hasura.ReloadMetadata(endpoint, adminSecret); err != nil {
+			cfg, err := config.NewConfigurationWithCmdParams(cmd)
+			if err != nil {
+				os.Exit(1)
+			}
+
+			if err := hasura.ReloadMetadata(cfg.Endpoint, cfg.AdminSecret); err != nil {
 				os.Exit(1)
 			}
 		},
@@ -24,11 +28,7 @@ var (
 )
 
 func init() {
-	reloadCmd.Flags().StringVar(&endpoint, "endpoint", "",
-		"Hasura endpoint URL, e.g. https://hasura.canida.io")
-	_ = reloadCmd.MarkFlagRequired("endpoint")
-	reloadCmd.Flags().StringVar(&adminSecret, "admin-secret", "",
-		"Hasura admin secret.")
-	_ = reloadCmd.MarkFlagRequired("admin-secret")
+	reloadCmd.Flags().String("endpoint", "", "Hasura endpoint URL, e.g. https://hasura.canida.io")
+	reloadCmd.Flags().String("admin-secret", "", "Hasura admin secret.")
 	rootCmd.AddCommand(reloadCmd)
 }
