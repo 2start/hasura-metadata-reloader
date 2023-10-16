@@ -19,8 +19,6 @@ var rootCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		println("endpoint: " + cfg.Endpoint)
-
 		reporting.InitSentry(cfg.SentryDsn, cfg.SentryEnv)
 	},
 	PersistentPostRun: func(cmd *cobra.Command, args []string) {
